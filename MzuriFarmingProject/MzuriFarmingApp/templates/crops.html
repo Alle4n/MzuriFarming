@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Crops{% endblock %}
+
+{% block content %}
+<h1>Crops</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Crop ID</th>
+            <th>Crop Name</th>
+            <th>Scientific Name</th>
+            <th>Average Yield (kg/ha)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Sample Data -->
+        <tr>
+            <td>1</td>
+            <td>Corn</td>
+            <td>Zea mays</td>
+            <td>7000.00</td>
+        </tr>
+        <!-- Add more rows as necessary -->
+    </tbody>
+</table>
+{% endblock %}
