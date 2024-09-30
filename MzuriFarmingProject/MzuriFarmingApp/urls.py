@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views
+from . import views 
+from .views import crops_list, subscriptions_list, reports_list, consulting_requests_list
 
 urlpatterns = [
     path('', views.index, name='index'),

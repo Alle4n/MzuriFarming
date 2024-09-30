@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Farmers, Crops, Subscriptions, Reports, ConsultingRequests
+from .forms import CropForm  # Ensure this form is created
 
 def index(request):
     return render(request, 'index.html')
@@ -10,7 +11,31 @@ def farmers_list(request):
 
 def crops_list(request):
     crops = Crops.objects.all()
-    return render(request, 'crops.html', {'crops': crops})
+    
+    if request.method == 'POST':
+        if 'add_crop' in request.POST:
+            form = CropForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('crops_list')
+        
+        elif 'edit_crop' in request.POST:
+            crop_id = request.POST.get('crop_id')
+            crop = get_object_or_404(Crops, id=crop_id)
+            form = CropForm(request.POST, instance=crop)
+            if form.is_valid():
+                form.save()
+                return redirect('crops_list')
+
+        elif 'delete_crop' in request.POST:
+            crop_id = request.POST.get('crop_id')
+            crop = get_object_or_404(Crops, id=crop_id)
+            crop.delete()
+            return redirect('crops_list')
+    else:
+        form = CropForm()
+
+    return render(request, 'crops.html', {'crops': crops, 'form': form})
 
 def subscriptions_list(request):
     subscriptions = Subscriptions.objects.all()

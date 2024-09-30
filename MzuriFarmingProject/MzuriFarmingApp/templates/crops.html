@@ -4,24 +4,49 @@
 
 {% block content %}
 <h1>Crops</h1>
-<table class="table table-bordered">
+
+<!-- Crop Form -->
+<form method="POST" class="mb-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="add_crop" class="btn btn-primary">Add Crop</button>
+</form>
+
+<table class="table table-bordered mt-3">
     <thead>
         <tr>
             <th>Crop ID</th>
             <th>Crop Name</th>
             <th>Scientific Name</th>
             <th>Average Yield (kg/ha)</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        <!-- Sample Data -->
         <tr>
-            <td>1</td>
-            <td>Corn</td>
-            <td>Zea mays</td>
-            <td>7000.00</td>
+            <td>{{ crop.id }}</td>
+            <td>{{ crop.CropName }}</td>
+            <td>{{ crop.ScientificName }}</td>
+            <td>{{ crop.AverageYield }}</td>
+            <td>
+                <!-- Edit Form -->
+                <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="crop_id" value="{{ crop.id }}">
+                    <button type="submit" name="edit_crop" class="btn btn-warning">Edit</button>
+                </form>
+                
+                <!-- Delete Form -->
+                <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="crop_id" value="{{ crop.id }}">
+                    <button type="submit" name="delete_crop" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
         </tr>
-        <!-- Add more rows as necessary -->
+        <tr>
+            <td colspan="5">No crops available.</td>
+        </tr>
     </tbody>
 </table>
 {% endblock %}
