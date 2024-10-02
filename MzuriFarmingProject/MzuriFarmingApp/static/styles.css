@@ -1,20 +1,106 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
+    line-height: 1.6; /* Improves readability */
+    color: #212529; /* Sets a default text color */
 }
 
 .navbar {
     margin-bottom: 20px;
+    background-color: #343a40; /* Dark background for the navbar */
+    padding: 10px; /* Adds padding inside the navbar */
+    border-radius: 5px; /* Rounds the corners of the navbar */
+}
+
+.navbar a {
+    color: #ffffff; /* White text for links */
+    text-decoration: none; /* Removes underline from links */
+    padding: 8px 15px; /* Adds padding to links */
+}
+
+.navbar a:hover {
+    background-color: #495057; /* Changes background on hover */
+    border-radius: 5px; /* Rounds the corners on hover */
 }
 
 .container {
     padding: 20px;
+    margin: 20px;
+    border: 1px solid #343a40; /* Adds a border to the container */
+    border-radius: 8px; /* Rounds the corners of the container */
+    background-color: #ffffff; /* Sets a white background for the container */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
 }
 
 h1 {
     color: #343a40;
+    text-align: center; /* Centers the heading */
+    margin-bottom: 20px; /* Adds space below the heading */
+}
+
+.text-center img {
+    max-width: 100%; /* Responsive image */
+    height: auto; /* Maintains aspect ratio */
+    border-radius: 8px; /* Rounds the corners of the image */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds shadow to the image */
 }
 
 .table {
     margin-top: 20px;
+    width: 100%; /* Makes the table full width */
+    border-collapse: collapse; /* Merges table borders */
+}
+
+.table th, .table td {
+    padding: 12px; /* Adds padding to table cells */
+    border: 1px solid #dee2e6; /* Light border for table cells */
+    text-align: left; /* Aligns text to the left */
+}
+
+.table th {
+    background-color: #343a40; /* Dark background for headers */
+    color: #ffffff; /* White text for headers */
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2; /* Light gray for even rows */
+}
+
+.table tr:hover {
+    background-color: #e9ecef; /* Highlight on row hover */
+}
+
+/* Footer styles */
+footer {
+    background-color: #f8f9fa; /* Light background for footer */
+    padding: 20px 0; /* Vertical padding */
+}
+
+footer h5 {
+    margin-bottom: 15px; /* Space below the footer headings */
+}
+
+footer a {
+    text-decoration: none; /* Removes underline from footer links */
+    color: #343a40; /* Dark text color for links */
+}
+
+footer a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+footer .text-center {
+    margin-top: 20px; /* Space above copyright text */
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+    .navbar a {
+        padding: 10px 5px; /* Adjust padding for smaller screens */
+    }
+    
+    .container {
+        margin: 10px; /* Reduce margin for smaller screens */
+        padding: 15px; /* Reduce padding for smaller screens */
+    }
 }

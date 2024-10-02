@@ -1,17 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Farmers, Crops, Subscriptions, Reports, ConsultingRequests
-from .forms import CropForm  # Ensure this form is created
+from .forms import CropForm, UserForm 
 
 def index(request):
     return render(request, 'index.html')
 
+def add_user(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = UserForm
+
+    return render(request, 'users.html', {'form': form})
+
+        
 def farmers_list(request):
     farmers = Farmers.objects.all()
     return render(request, 'farmers.html', {'farmers': farmers})
 
 def crops_list(request):
     crops = Crops.objects.all()
-    
+
     if request.method == 'POST':
         if 'add_crop' in request.POST:
             form = CropForm(request.POST)

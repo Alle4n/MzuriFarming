@@ -1,5 +1,5 @@
 from django import forms
-from .models import Crops
+from .models import Crops, Users
 
 class CropForm(forms.ModelForm):
     class Meta:
@@ -11,3 +11,8 @@ class CropForm(forms.ModelForm):
             'scientific_name': forms.TextInput(attrs={'class': 'form-control'}),
             'average_yield': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = Users
+        fields = ['Username', 'PasswordHash', 'Email', 'Role']

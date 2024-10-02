@@ -1,8 +1,21 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <h1>Welcome to Mzuri Farming</h1>
-<p>This application provides agricultural data management services.</p>
+<img src="{% static 'images/MzuriFarming.jpeg' %}" alt="Farming Image" class="img-fluid rounded" style="max-width: 100%; height: auto;"><br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-12 mb-4">
+            <h3 class="text-uppercase">About Us</h3>
+            <p>At MzuriFarming, we empower smallholder farmers in Uganda with advanced data analytics and actionable insights to optimize their agricultural practices. Our mission is to enhance productivity, drive sustainability, and support farmers in navigating the challenges posed by climate variability and limited access to technology.</p>
+        </div>
+    </div>
+</div>
+ <!-- Get Started Button -->
+ <div class="my-4">
+    <a href="{% url 'index' %}" class="btn btn-primary btn-lg">Get Started Here</a>
+</div>
 {% endblock %}

@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views 
-from .views import crops_list, subscriptions_list, reports_list, consulting_requests_list
+
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('users/', views.add_user, name='add_user'),
     path('farmers/', views.farmers_list, name='farmers_list'),
     path('crops/', views.crops_list, name='crops_list'),
     path('subscriptions/', views.subscriptions_list, name='subscriptions_list'),
