@@ -12,7 +12,7 @@ def add_user(request):
             form.save()
             return redirect('/')
     else:
-        form = UserForm
+        form = UserForm()
 
     return render(request, 'users.html', {'form': form})
 

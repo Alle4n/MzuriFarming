@@ -1,106 +1,106 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
-    line-height: 1.6; /* Improves readability */
-    color: #212529; /* Sets a default text color */
+    line-height: 1.6;
+    color: #212529;
 }
 
 .navbar {
     margin-bottom: 20px;
-    background-color: #343a40; /* Dark background for the navbar */
-    padding: 10px; /* Adds padding inside the navbar */
-    border-radius: 5px; /* Rounds the corners of the navbar */
+    background-color: #343a40;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .navbar a {
-    color: #ffffff; /* White text for links */
-    text-decoration: none; /* Removes underline from links */
-    padding: 8px 15px; /* Adds padding to links */
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 15px;
 }
 
 .navbar a:hover {
-    background-color: #495057; /* Changes background on hover */
-    border-radius: 5px; /* Rounds the corners on hover */
+    background-color: #495057;
+    border-radius: 5px;
 }
 
 .container {
     padding: 20px;
     margin: 20px;
-    border: 1px solid #343a40; /* Adds a border to the container */
-    border-radius: 8px; /* Rounds the corners of the container */
-    background-color: #ffffff; /* Sets a white background for the container */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    border: 1px solid #343a40; 
+    border-radius: 8px;
+    background-color: #ffffff; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     color: #343a40;
-    text-align: center; /* Centers the heading */
-    margin-bottom: 20px; /* Adds space below the heading */
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .text-center img {
-    max-width: 100%; /* Responsive image */
-    height: auto; /* Maintains aspect ratio */
-    border-radius: 8px; /* Rounds the corners of the image */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds shadow to the image */
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .table {
     margin-top: 20px;
-    width: 100%; /* Makes the table full width */
-    border-collapse: collapse; /* Merges table borders */
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .table th, .table td {
-    padding: 12px; /* Adds padding to table cells */
-    border: 1px solid #dee2e6; /* Light border for table cells */
-    text-align: left; /* Aligns text to the left */
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    text-align: left;
 }
 
 .table th {
-    background-color: #343a40; /* Dark background for headers */
-    color: #ffffff; /* White text for headers */
+    background-color: #343a40;
+    color: #ffffff;
 }
 
 .table tr:nth-child(even) {
-    background-color: #f2f2f2; /* Light gray for even rows */
+    background-color: #f2f2f2;
 }
 
 .table tr:hover {
-    background-color: #e9ecef; /* Highlight on row hover */
+    background-color: #e9ecef;
 }
 
 /* Footer styles */
 footer {
-    background-color: #f8f9fa; /* Light background for footer */
-    padding: 20px 0; /* Vertical padding */
+    background-color: #f8f9fa;
+    padding: 20px 0;
 }
 
 footer h5 {
-    margin-bottom: 15px; /* Space below the footer headings */
+    margin-bottom: 15px;
 }
 
 footer a {
-    text-decoration: none; /* Removes underline from footer links */
-    color: #343a40; /* Dark text color for links */
+    text-decoration: none;
+    color: #343a40;
 }
 
 footer a:hover {
-    text-decoration: underline; /* Underline on hover */
+    text-decoration: underline;
 }
 
 footer .text-center {
-    margin-top: 20px; /* Space above copyright text */
+    margin-top: 20px;
 }
 
-/* Media Queries for Responsive Design */
+
 @media (max-width: 768px) {
     .navbar a {
-        padding: 10px 5px; /* Adjust padding for smaller screens */
+        padding: 10px 5px;
     }
     
     .container {
-        margin: 10px; /* Reduce margin for smaller screens */
-        padding: 15px; /* Reduce padding for smaller screens */
+        margin: 10px; 
+        padding: 15px;
     }
 }

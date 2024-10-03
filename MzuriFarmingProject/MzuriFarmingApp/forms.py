@@ -15,4 +15,4 @@ class CropForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = Users
-        fields = ['Username', 'PasswordHash', 'Email', 'Role']
+        fields = ['Username', 'Password', 'Email', 'Role']
