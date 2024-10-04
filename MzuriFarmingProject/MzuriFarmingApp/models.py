@@ -12,7 +12,7 @@ class Users(models.Model):
     Username = models.CharField(max_length=50, unique=True)
     Password = models.CharField(max_length=64)
     Email = models.EmailField(max_length=100, unique=True)
-    # Role = models.CharField(max_length=15, choices=USER_ROLES)
+    Role = models.CharField(max_length=15, choices=USER_ROLES)
     # CreatedAt = models.DateTimeField(auto_now_add=True)
 
 class Farmers(models.Model):
