@@ -4,9 +4,11 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1>Welcome to Mzuri Farming</h1>
-<img src="{% static 'images/MzuriFarming.jpeg' %}" alt="Farming Image" class="img-fluid rounded" style="max-width: 100%; height: auto;"><br>
-<div class="container">
+    <h1 class="text-center">Welcome to Mzuri Farming</h1>
+    <div class="text-center">
+        <img src="{% static 'images/MzuriFarming.jpeg' %}" alt="Farming Image" class="img-fluid"><br>
+    </div>
+    <div class="container">
     <div class="row">
         <div class="col-lg-4 col-md-12 mb-4">
             <h3 class="text-uppercase">About Us</h3>
@@ -28,7 +30,7 @@
     </div>
 </div>
 <!-- Get Started Button -->
-<div class="my-4">
-    <a href="{% url 'index' %}" class="btn btn-primary btn-lg">Get Started Here</a>
+<div class="my-4 text-center">
+    <a href="{% url 'add_user' %}" class="btn btn-primary btn-lg">Get Started Here</a>
 </div>
 {% endblock %}
