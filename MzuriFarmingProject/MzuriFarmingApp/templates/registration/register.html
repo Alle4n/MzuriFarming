@@ -1,15 +1,18 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Users{% endblock %}
+{% block title %}Register{% endblock %}
+
+{% block navbar %}{% endblock %} 
 
 {% block content %}
+<div class="login-container">
 <h1>Register</h1>
-
-<form method="POST" class="mb-3">  <!-- Start form here -->
+<form method="POST" class="mb-3"> 
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" name="register" class="btn btn-primary">Register</button>
-</form>  <!-- Move the closing tag here -->
-
+</form>
+</div>
 <p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
 {% endblock %}
