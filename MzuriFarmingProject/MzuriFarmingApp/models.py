@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 # Create your models here.
 class Users(models.Model):
@@ -14,24 +15,7 @@ class Users(models.Model):
     Password = models.CharField(max_length=64)
     Email = models.EmailField(max_length=100, unique=True)
     Role = models.CharField(max_length=15, choices=USER_ROLES)
-    # CreatedAt = models.DateTimeField(auto_now_add=True)
-
-# class Users(AbstractUser):
-#     # Additional field to specify the user's role (e.g., Admin or User)
-#     ROLE_CHOICES = [
-#         ('admin', 'Admin'),
-#         ('Farmer', 'Farmer'),
-#     ]
-#     Username = models.CharField(max_length=50, unique=True)
-#     Password = models.CharField(max_length=64)
-#     Role = models.CharField(
-#         max_length=50,
-#         choices=ROLE_CHOICES,
-#         default='Farmer'  # Set a default role if desired
-#     )
-
-#     def __str__(self):
-#         return self.username
+    CreatedAt = models.DateTimeField(default=timezone.now)
 
 class Farmers(models.Model):
     User = models.OneToOneField(Users, on_delete=models.CASCADE)

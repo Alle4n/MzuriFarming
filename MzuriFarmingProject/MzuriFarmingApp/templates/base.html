@@ -12,17 +12,29 @@
 <body>
     {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">Mzuri Farming</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                
+                {% if current_page != 'farmers' %}
                 <li class="nav-item"><a class="nav-link" href="/farmers">Farmers</a></li>
+                {% endif %}
+                
+                {% if current_page != 'crops' %}
                 <li class="nav-item"><a class="nav-link" href="/crops">Crops</a></li>
+                {% endif %}
+                
+                {% if current_page != 'subscriptions' %}
                 <li class="nav-item"><a class="nav-link" href="/subscriptions">Subscriptions</a></li>
+                {% endif %}
+                
+                {% if current_page != 'reports' %}
                 <li class="nav-item"><a class="nav-link" href="/reports">Reports</a></li>
+                {% endif %}
+                
+                {% if current_page != 'consulting_requests' %}
                 <li class="nav-item"><a class="nav-link" href="/consulting_requests">Consulting Requests</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
@@ -51,10 +63,11 @@
     <script>
         $(document).ready(function() {
             $('a.nav-link').on('click', function(event) {
-                event.preventDefault();
-                $('html, body').animate({
-                    scrollTop: $(this.hash).offset().top
-                }, 500);
+                // Uncomment this if you want custom scroll behavior
+                // event.preventDefault();
+                // $('html, body').animate({
+                //     scrollTop: $(this.hash).offset().top
+                // }, 500);
             });
         });
     </script>

@@ -23,30 +23,35 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>{{ crop.id }}</td>
-            <td>{{ crop.CropName }}</td>
-            <td>{{ crop.ScientificName }}</td>
-            <td>{{ crop.AverageYield }}</td>
-            <td>
-                <!-- Edit Form -->
-                <form method="POST" style="display:inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="crop_id" value="{{ crop.id }}">
-                    <button type="submit" name="edit_crop" class="btn btn-warning">Edit</button>
-                </form>
-                
-                <!-- Delete Form -->
-                <form method="POST" style="display:inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="crop_id" value="{{ crop.id }}">
-                    <button type="submit" name="delete_crop" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="5">No crops available.</td>
-        </tr>
+        {% if crops %}
+            {% for crop in crops %}
+                <tr>
+                    <td>{{ crop.id }}</td>
+                    <td>{{ crop.CropName }}</td>
+                    <td>{{ crop.ScientificName }}</td>
+                    <td>{{ crop.AverageYield }}</td>
+                    <td>
+                        <!-- Edit Form -->
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="crop_id" value="{{ crop.id }}">
+                            <button type="submit" name="edit_crop" class="btn btn-warning">Edit</button>
+                        </form>
+                        
+                        <!-- Delete Form -->
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="crop_id" value="{{ crop.id }}">
+                            <button type="submit" name="delete_crop" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5">No crops available.</td>
+            </tr>
+        {% endif %}
     </tbody>
 </table>
 {% endblock %}
