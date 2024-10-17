@@ -51,25 +51,26 @@ class RegistrationForm(forms.Form):
 
         return cleaned_data
 
-class CropForm(forms.ModelForm):
-    classification = forms.CharField(  # Change this to a CharField
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label="Crop Classification"
-    )
 
+class CropForm(forms.ModelForm):
     class Meta:
         model = Crops
-        fields = ['crop_name', 'scientific_name', 'average_yield', 'classification']  # Use lowercase field names to match model
+        fields = ['crop_name', 'harvest_in_kg', 'land_size_acres']  # Include new fields
 
-        widgets = {
-            'crop_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'scientific_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'average_yield': forms.NumberInput(attrs={'class': 'form-control'}),
-        }
-
-    def clean_average_yield(self):
-        average_yield = self.cleaned_data.get('average_yield')
-        if average_yield is not None and average_yield < 0:
-            raise ValidationError("Average yield must be a positive number.")
-        return average_yield
+    def __init__(self, *args, **kwargs):
+        super(CropForm, self).__init__(*args, **kwargs)
+        self.fields['crop_name'].widget.attrs.update({
+            'class': 'form-control',
+            'id': 'crop_name',
+            'required': 'required'
+        })
+        self.fields['harvest_in_kg'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter Harvest (kg)',
+            'required': 'required'
+        })
+        self.fields['land_size_acres'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter Land Size (acres)',
+            'required': 'required'
+        })

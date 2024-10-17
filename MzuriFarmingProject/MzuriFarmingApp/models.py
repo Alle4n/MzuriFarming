@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from decimal import Decimal
 
 class Users(models.Model):
     USER_ROLES = (
@@ -10,7 +11,7 @@ class Users(models.Model):
     )
     
     username = models.CharField(max_length=50, unique=True)
-    password = models.CharField(max_length=64)
+    password = models.CharField(max_length=64)  # Consider using a hashed password
     email = models.EmailField(max_length=100, unique=True)
     role = models.CharField(max_length=15, choices=USER_ROLES)
     created_at = models.DateTimeField(default=timezone.now)
@@ -19,7 +20,7 @@ class Users(models.Model):
         return self.username
 
 class Farmers(models.Model):
-    user = models.OneToOneField(Users, on_delete=models.CASCADE)
+    user = models.OneToOneField(Users, on_delete=models.CASCADE, related_name='farmer_profile')
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
     location = models.CharField(max_length=255)
@@ -31,8 +32,19 @@ class Farmers(models.Model):
 class Crops(models.Model):
     crop_name = models.CharField(max_length=100)
     scientific_name = models.CharField(max_length=100)
-    average_yield = models.DecimalField(max_digits=10, decimal_places=2)
-    classification = models.CharField(max_length=100)  # Changed to CharField
+    average_yield = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)  # to be calculated
+    classification = models.CharField(max_length=100)  
+    harvest_in_kg = models.DecimalField(max_digits=15, decimal_places=2)
+    land_size_acres = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def calculate_average_yield(self):
+        if self.land_size_acres > 0:  # Prevent division by zero
+            return Decimal(self.harvest_in_kg) / Decimal(self.land_size_acres) * Decimal('2.47105')  # Use Decimal for conversion
+        return Decimal('0')  # Return a Decimal zero
+
+    def save(self, *args, **kwargs):
+        self.average_yield = self.calculate_average_yield()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.crop_name
@@ -45,6 +57,9 @@ class WeatherData(models.Model):
     rainfall = models.DecimalField(max_digits=5, decimal_places=2)
     weather_condition = models.CharField(max_length=100)
 
+    class Meta:
+        unique_together = ('location', 'date')
+
     def __str__(self):
         return f"{self.date} - {self.location}"
 
@@ -56,6 +71,9 @@ class SoilConditions(models.Model):
     phosphorus = models.DecimalField(max_digits=5, decimal_places=2)
     potassium = models.DecimalField(max_digits=5, decimal_places=2)
 
+    class Meta:
+        unique_together = ('location', 'ph')
+
     def __str__(self):
         return self.location
 
@@ -64,6 +82,9 @@ class CropYield(models.Model):
     crop = models.ForeignKey(Crops, on_delete=models.CASCADE)
     year = models.IntegerField()
     yield_value = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        unique_together = ('farmer', 'crop', 'year')
 
     def __str__(self):
         return f"{self.crop} - {self.year}"

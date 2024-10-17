@@ -6,48 +6,52 @@
 <h1>Crops</h1>
 
 <!-- Crop Form -->
-<form method="POST" class="mb-3">
+<form method="POST" class="mb-3" id="crop-form">
     {% csrf_token %}
-    <div class="form-group">
-        <label for="classification">Crop Classification</label>
-        <input type="text" name="classification" id="classification" class="form-control" placeholder="Enter Crop Classification" required>
-    </div>
-
     <div class="form-group">
         <label for="crop_name">Crop Name</label>
         <select name="crop_name" id="crop_name" class="form-control" required>
-            <option value="" disabled selected>Select Crop Name</option>
+            <option value="" disabled {% if form.instance.id %}selected{% endif %}>Select Crop Name</option>
             {% for crop in crop_choices %}
-                <option value="{{ crop.CropName }}">{{ crop.CropName }}</option>
+                <option value="{{ crop.cropName }}" data-scientific="{{ crop.scientificName }}" data-classification="{{ crop.classification }}"
+                        {% if crop.crop_name == form.instance.crop_name %}selected{% endif %}>
+                    {{ crop.cropName }}
+                </option>
             {% endfor %}
         </select>
     </div>
 
     <div class="form-group">
-        <label for="scientific_name">Scientific Name</label>
-        <select name="scientific_name" id="scientific_name" class="form-control" required>
-            <option value="" disabled selected>Select Scientific Name</option>
-            {% for crop in crop_choices %}
-                <option value="{{ crop.ScientificName }}">{{ crop.ScientificName }}</option>
-            {% endfor %}
-        </select>
+        <label for="harvest_in_kg">Harvest (kg)</label>
+        <input type="number" name="harvest_in_kg" id="harvest_in_kg" class="form-control" placeholder="Enter Harvest (kg)" required
+               value="{{ form.instance.harvest_in_kg }}">
     </div>
 
     <div class="form-group">
-        <label for="average_yield">Average Yield (kg/ha)</label>
-        <input type="number" name="average_yield" id="average_yield" class="form-control" placeholder="Enter Average Yield" required>
+        <label for="land_size_acres">Land Size (acres)</label>
+        <input type="number" name="land_size_acres" id="land_size_acres" class="form-control" placeholder="Enter Land Size (acres)" required
+               value="{{ form.instance.land_size_acres }}">
     </div>
 
-    <button type="submit" name="add_crop" class="btn btn-primary">Add Crop</button>
+    <input type="hidden" name="crop_id" value="{{ form.instance.id }}">
+    <input type="hidden" id="classification" name="classification" value="{{ form.instance.classification }}">
+    <input type="hidden" id="scientific_name" name="scientific_name" value="{{ form.instance.scientific_name }}">
+
+    <button type="submit" name="{% if form.instance.id %}edit_crop{% else %}add_crop{% endif %}" class="btn btn-primary">
+        {% if form.instance.id %}Update Crop{% else %}Add Crop{% endif %}
+    </button>
 </form>
 
+<!-- Table for displaying crops -->
 <table class="table table-bordered mt-3">
     <thead>
         <tr>
             <th>Crop ID</th>
+            <th>Crop Classification</th>
             <th>Crop Name</th>
-            <th>Classification</th>
             <th>Scientific Name</th>
+            <th>Harvest (kg)</th>
+            <th>Land Size (acres)</th>
             <th>Average Yield (kg/ha)</th>
             <th>Actions</th>
         </tr>
@@ -57,32 +61,52 @@
             {% for crop in crops %}
                 <tr>
                     <td>{{ crop.id }}</td>
-                    <td>{{ crop.crop_name }}</td>  <!-- Use lowercase field names -->
-                    <td>{{ crop.classification }}</td>  <!-- Directly access the classification -->
-                    <td>{{ crop.scientific_name }}</td>  <!-- Use lowercase field names -->
-                    <td>{{ crop.average_yield }}</td>  <!-- Use lowercase field names -->
+                    <td>{{ crop.classification }}</td>
+                    <td>{{ crop.crop_name }}</td>
+                    <td>{{ crop.scientific_name }}</td>
+                    <td>{{ crop.harvest_in_kg }}</td>
+                    <td>{{ crop.land_size_acres }}</td>
+                    <td>{{ crop.average_yield }}</td>
                     <td>
                         <!-- Edit Form -->
-                        <form method="POST" style="display:inline;">
+                        <form method="POST" action="{% url 'crops_list' %}" style="display:inline;">
                             {% csrf_token %}
                             <input type="hidden" name="crop_id" value="{{ crop.id }}">
                             <button type="submit" name="edit_crop" class="btn btn-warning">Edit</button>
                         </form>
                         
                         <!-- Delete Form -->
-                        <form method="POST" style="display:inline;">
+                        <form method="POST" action="{% url 'crops_list' %}" style="display:inline;">
                             {% csrf_token %}
                             <input type="hidden" name="crop_id" value="{{ crop.id }}">
-                            <button type="submit" name="delete_crop" class="btn btn-danger">Delete</button>
+                            <button type="submit" name="delete_crop" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this crop?');">Delete</button>
                         </form>
                     </td>
                 </tr>
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="6">No crops available.</td>
+                <td colspan="8">No crops available.</td>
             </tr>
         {% endif %}
     </tbody>
 </table>
+
+<script>
+    // JavaScript to populate scientific name and classification based on selected crop name
+    document.getElementById('crop_name').addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        var classificationInput = document.getElementById('classification'); // Ensure you have this input field in the form
+        var scientificNameInput = document.getElementById('scientific_name'); // Ensure you have this input field in the form
+        
+        if (selectedOption) {
+            classificationInput.value = selectedOption.getAttribute('data-classification') || '';
+            scientificNameInput.value = selectedOption.getAttribute('data-scientific') || '';
+        } else {
+            classificationInput.value = '';
+            scientificNameInput.value = '';
+        }
+    });
+</script>
+
 {% endblock %}

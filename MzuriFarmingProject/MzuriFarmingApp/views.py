@@ -21,8 +21,7 @@ def login_view(request):
                 login(request, user)
                 messages.success(request, 'Login successful!')
                 return redirect('crops_list')
-            else:
-                messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid username or password.')
     else:
         form = LoginForm()
 
@@ -32,10 +31,11 @@ def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            User.objects.create_user(username=username, email=email, password=password)
+            User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
+            )
             messages.success(request, 'Registration successful! You can now log in.')
             return redirect('login')
     else:
@@ -47,9 +47,22 @@ def farmers_list(request):
     farmers = Farmers.objects.all()
     return render(request, 'farmers.html', {'farmers': farmers, 'current_page': 'farmers'})
 
+# def read_crop_data_from_excel(file_path):
+#     try:
+#         df = pd.read_excel('MzuriFarmingApp/static/excel/crops.xlsx', sheet_name='Sheet1')
+#         crop_choices = df[['Classification', 'CropName', 'ScientificName']].drop_duplicates().to_dict('records')
+#         return crop_choices
+#     except Exception as e:
+#         messages.error(request, f"Error reading crop data: {e}")
+#         return []
+
+# def crops_list(request):
+#     crops = Crops.objects.all()
+#     crop_choices = read_crop_data_from_excel('MzuriFarmingApp/static/excel/crops.xlsx')
+#     form = CropForm()
 def read_crop_data_from_excel(file_path):
-    df = pd.read_excel(file_path, sheet_name='Sheet1')
-    crop_choices = df[['CropName', 'ScientificName']].drop_duplicates().to_dict('records')
+    df = pd.read_excel('MzuriFarmingApp/static/excel/crops.xlsx', sheet_name='Sheet1')
+    crop_choices = df[['classification', 'cropName', 'scientificName']].drop_duplicates().to_dict('records')
     return crop_choices
 
 def crops_list(request):
@@ -58,17 +71,26 @@ def crops_list(request):
     form = CropForm()
 
     if request.method == 'POST':
+        crop_id = request.POST.get('crop_id')
+
         if 'add_crop' in request.POST:
             form = CropForm(request.POST)
             if form.is_valid():
-                form.save()
+                crop = form.save(commit=False)
+                # Automatically populate scientific_name and classification from crop_choices
+                for choice in crop_choices:
+                    if choice['cropName'] == crop.crop_name:
+                        crop.scientific_name = choice['scientificName']
+                        crop.classification = choice['classification']
+                        break
+                crop.save()
                 messages.success(request, 'Crop added successfully!')
                 return redirect('crops_list')
             else:
                 messages.error(request, 'Failed to add crop. Please check your input.')
 
-        elif 'edit_crop' in request.POST:
-            crop_id = request.POST.get('crop_id')
+
+        elif 'edit_crop' in request.POST and crop_id:
             crop = get_object_or_404(Crops, id=crop_id)
             form = CropForm(request.POST, instance=crop)
             if form.is_valid():
@@ -78,13 +100,12 @@ def crops_list(request):
             else:
                 messages.error(request, 'Failed to update crop. Please check your input.')
 
-        elif 'delete_crop' in request.POST:
-            crop_id = request.POST.get('crop_id')
+        elif 'delete_crop' in request.POST and crop_id:
             crop = get_object_or_404(Crops, id=crop_id)
             crop.delete()
             messages.success(request, 'Crop deleted successfully!')
             return redirect('crops_list')
-    
+
     return render(request, 'crops.html', {
         'crops': crops,
         'form': form,
