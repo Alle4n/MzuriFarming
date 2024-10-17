@@ -11,7 +11,7 @@ class Users(models.Model):
     )
     
     username = models.CharField(max_length=50, unique=True)
-    password = models.CharField(max_length=64)  # Consider using a hashed password
+    password = models.CharField(max_length=64) 
     email = models.EmailField(max_length=100, unique=True)
     role = models.CharField(max_length=15, choices=USER_ROLES)
     created_at = models.DateTimeField(default=timezone.now)
@@ -39,7 +39,7 @@ class Crops(models.Model):
 
     def calculate_average_yield(self):
         if self.land_size_acres > 0:  # Prevent division by zero
-            return Decimal(self.harvest_in_kg) / Decimal(self.land_size_acres) * Decimal('2.47105')  # Use Decimal for conversion
+            return Decimal(self.harvest_in_kg) / Decimal(self.land_size_acres) * Decimal('2.47105')
         return Decimal('0')  # Return a Decimal zero
 
     def save(self, *args, **kwargs):

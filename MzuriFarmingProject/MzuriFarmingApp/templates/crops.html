@@ -96,8 +96,8 @@
     // JavaScript to populate scientific name and classification based on selected crop name
     document.getElementById('crop_name').addEventListener('change', function() {
         var selectedOption = this.options[this.selectedIndex];
-        var classificationInput = document.getElementById('classification'); // Ensure you have this input field in the form
-        var scientificNameInput = document.getElementById('scientific_name'); // Ensure you have this input field in the form
+        var classificationInput = document.getElementById('classification');
+        var scientificNameInput = document.getElementById('scientific_name');
         
         if (selectedOption) {
             classificationInput.value = selectedOption.getAttribute('data-classification') || '';

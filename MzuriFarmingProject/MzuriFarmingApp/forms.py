@@ -55,7 +55,7 @@ class RegistrationForm(forms.Form):
 class CropForm(forms.ModelForm):
     class Meta:
         model = Crops
-        fields = ['crop_name', 'harvest_in_kg', 'land_size_acres']  # Include new fields
+        fields = ['crop_name', 'harvest_in_kg', 'land_size_acres']
 
     def __init__(self, *args, **kwargs):
         super(CropForm, self).__init__(*args, **kwargs)

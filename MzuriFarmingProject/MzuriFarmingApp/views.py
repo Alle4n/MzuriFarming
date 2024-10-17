@@ -20,7 +20,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Login successful!')
-                return redirect('crops_list')
+                return redirect('dashboard')
             messages.error(request, 'Invalid username or password.')
     else:
         form = LoginForm()
@@ -47,27 +47,14 @@ def farmers_list(request):
     farmers = Farmers.objects.all()
     return render(request, 'farmers.html', {'farmers': farmers, 'current_page': 'farmers'})
 
-# def read_crop_data_from_excel(file_path):
-#     try:
-#         df = pd.read_excel('MzuriFarmingApp/static/excel/crops.xlsx', sheet_name='Sheet1')
-#         crop_choices = df[['Classification', 'CropName', 'ScientificName']].drop_duplicates().to_dict('records')
-#         return crop_choices
-#     except Exception as e:
-#         messages.error(request, f"Error reading crop data: {e}")
-#         return []
-
-# def crops_list(request):
-#     crops = Crops.objects.all()
-#     crop_choices = read_crop_data_from_excel('MzuriFarmingApp/static/excel/crops.xlsx')
-#     form = CropForm()
 def read_crop_data_from_excel(file_path):
     df = pd.read_excel('MzuriFarmingApp/static/excel/crops.xlsx', sheet_name='Sheet1')
     crop_choices = df[['classification', 'cropName', 'scientificName']].drop_duplicates().to_dict('records')
     return crop_choices
 
 def crops_list(request):
-    crops = Crops.objects.all()  # No need for select_related since classification is a CharField
-    crop_choices = read_crop_data_from_excel('MzuriFarmingApp/static/excel/crops.xlsx')  # Update the path
+    crops = Crops.objects.all()  
+    crop_choices = read_crop_data_from_excel('MzuriFarmingApp/static/excel/crops.xlsx')  
     form = CropForm()
 
     if request.method == 'POST':
@@ -130,22 +117,24 @@ def dashboard(request):
     farmer_count = Farmers.objects.count()
     crop_count = Crops.objects.count()
 
-    yield_data = CropYield.objects.values('year').annotate(total_yield=Sum('yield_value')).order_by('year')
-    years = [data['year'] for data in yield_data]
-    total_yields = [data['total_yield'] for data in yield_data]
+    # Get crop classification counts
+    classification_counts = Crops.objects.values('classification').annotate(count=Count('id'))
+    classifications = [item['classification'] for item in classification_counts]
+    counts = [item['count'] for item in classification_counts]
 
-    registration_data = Users.objects.values('created_at__date').annotate(count=Count('id')).order_by('created_at__date')
-    registration_dates = [data['created_at__date'] for data in registration_data]
-    registration_counts = [data['count'] for data in registration_data]
+    # Get average yields for the crops
+    average_yield_data = Crops.objects.values('crop_name').annotate(avg_yield=Count('average_yield'))
+    yield_labels = [item['crop_name'] for item in average_yield_data]
+    average_yields = [item['avg_yield'] for item in average_yield_data]
 
     context = {
         'user_count': user_count,
         'farmer_count': farmer_count,
         'crop_count': crop_count,
-        'years': years,
-        'total_yields': total_yields,
-        'registration_dates': registration_dates,
-        'registration_counts': registration_counts,
+        'classifications': classifications,
+        'counts': counts,
+        'yield_labels': yield_labels,
+        'average_yields': average_yields,
         'current_page': 'dashboard',
     }
 
