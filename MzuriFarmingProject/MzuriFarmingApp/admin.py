@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Crops, Users
+from .models import Crops
 
-# Register your models here.
-admin.site.register(Crops)
+@admin.register(Crops)
+class CropsAdmin(admin.ModelAdmin):
+    list_display = ['id', 'crop_name', 'scientific_name', 'average_yield', 'classification']

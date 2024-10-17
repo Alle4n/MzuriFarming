@@ -1,4 +1,4 @@
-from django import forms
+from django import forms 
 from .models import Crops, Users
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -14,15 +14,12 @@ class LoginForm(forms.Form):
 
         # Check if username exists
         if username:
-            try:
-                user = User.objects.get(username=username)
-            except User.DoesNotExist:
+            if not User.objects.filter(username=username).exists():
                 self.add_error('username', 'Username does not exist.')
 
         # Add custom password checks
-        if password:
-            if len(password) < 5:
-                self.add_error('password', 'Password must be at least 5 characters long.')
+        if password and len(password) < 5:
+            self.add_error('password', 'Password must be at least 5 characters long.')
 
         return cleaned_data
 
@@ -55,12 +52,24 @@ class RegistrationForm(forms.Form):
         return cleaned_data
 
 class CropForm(forms.ModelForm):
+    classification = forms.CharField(  # Change this to a CharField
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label="Crop Classification"
+    )
+
     class Meta:
         model = Crops
-        fields = ['CropName', 'ScientificName', 'AverageYield']
+        fields = ['crop_name', 'scientific_name', 'average_yield', 'classification']  # Use lowercase field names to match model
 
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'crop_name': forms.TextInput(attrs={'class': 'form-control'}),
             'scientific_name': forms.TextInput(attrs={'class': 'form-control'}),
             'average_yield': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+    def clean_average_yield(self):
+        average_yield = self.cleaned_data.get('average_yield')
+        if average_yield is not None and average_yield < 0:
+            raise ValidationError("Average yield must be a positive number.")
+        return average_yield

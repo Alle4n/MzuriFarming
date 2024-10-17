@@ -8,7 +8,36 @@
 <!-- Crop Form -->
 <form method="POST" class="mb-3">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div class="form-group">
+        <label for="classification">Crop Classification</label>
+        <input type="text" name="classification" id="classification" class="form-control" placeholder="Enter Crop Classification" required>
+    </div>
+
+    <div class="form-group">
+        <label for="crop_name">Crop Name</label>
+        <select name="crop_name" id="crop_name" class="form-control" required>
+            <option value="" disabled selected>Select Crop Name</option>
+            {% for crop in crop_choices %}
+                <option value="{{ crop.CropName }}">{{ crop.CropName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="scientific_name">Scientific Name</label>
+        <select name="scientific_name" id="scientific_name" class="form-control" required>
+            <option value="" disabled selected>Select Scientific Name</option>
+            {% for crop in crop_choices %}
+                <option value="{{ crop.ScientificName }}">{{ crop.ScientificName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="average_yield">Average Yield (kg/ha)</label>
+        <input type="number" name="average_yield" id="average_yield" class="form-control" placeholder="Enter Average Yield" required>
+    </div>
+
     <button type="submit" name="add_crop" class="btn btn-primary">Add Crop</button>
 </form>
 
@@ -17,6 +46,7 @@
         <tr>
             <th>Crop ID</th>
             <th>Crop Name</th>
+            <th>Classification</th>
             <th>Scientific Name</th>
             <th>Average Yield (kg/ha)</th>
             <th>Actions</th>
@@ -27,9 +57,10 @@
             {% for crop in crops %}
                 <tr>
                     <td>{{ crop.id }}</td>
-                    <td>{{ crop.CropName }}</td>
-                    <td>{{ crop.ScientificName }}</td>
-                    <td>{{ crop.AverageYield }}</td>
+                    <td>{{ crop.crop_name }}</td>  <!-- Use lowercase field names -->
+                    <td>{{ crop.classification }}</td>  <!-- Directly access the classification -->
+                    <td>{{ crop.scientific_name }}</td>  <!-- Use lowercase field names -->
+                    <td>{{ crop.average_yield }}</td>  <!-- Use lowercase field names -->
                     <td>
                         <!-- Edit Form -->
                         <form method="POST" style="display:inline;">
@@ -49,7 +80,7 @@
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="5">No crops available.</td>
+                <td colspan="6">No crops available.</td>
             </tr>
         {% endif %}
     </tbody>

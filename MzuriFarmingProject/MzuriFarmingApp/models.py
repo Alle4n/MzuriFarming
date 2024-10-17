@@ -1,8 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
-# Create your models here.
 class Users(models.Model):
     USER_ROLES = (
         ('Farmer', 'Farmer'),
@@ -11,45 +9,64 @@ class Users(models.Model):
         ('Admin', 'Admin'),
     )
     
-    Username = models.CharField(max_length=50, unique=True)
-    Password = models.CharField(max_length=64)
-    Email = models.EmailField(max_length=100, unique=True)
-    Role = models.CharField(max_length=15, choices=USER_ROLES)
-    CreatedAt = models.DateTimeField(default=timezone.now)
+    username = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=64)
+    email = models.EmailField(max_length=100, unique=True)
+    role = models.CharField(max_length=15, choices=USER_ROLES)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.username
 
 class Farmers(models.Model):
-    User = models.OneToOneField(Users, on_delete=models.CASCADE)
-    FullName = models.CharField(max_length=100)
-    PhoneNumber = models.CharField(max_length=15)
-    Location = models.CharField(max_length=255)
-    FarmSize = models.DecimalField(max_digits=10, decimal_places=2)
+    user = models.OneToOneField(Users, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
+    location = models.CharField(max_length=255)
+    farm_size = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.full_name
 
 class Crops(models.Model):
-    CropName = models.CharField(max_length=100)
-    ScientificName = models.CharField(max_length=100)
-    AverageYield = models.DecimalField(max_digits=10, decimal_places=2)
+    crop_name = models.CharField(max_length=100)
+    scientific_name = models.CharField(max_length=100)
+    average_yield = models.DecimalField(max_digits=10, decimal_places=2)
+    classification = models.CharField(max_length=100)  # Changed to CharField
+
+    def __str__(self):
+        return self.crop_name
 
 class WeatherData(models.Model):
-    Location = models.CharField(max_length=255)
-    Date = models.DateField()
-    Temperature = models.DecimalField(max_digits=5, decimal_places=2)
-    Humidity = models.DecimalField(max_digits=5, decimal_places=2)
-    Rainfall = models.DecimalField(max_digits=5, decimal_places=2)
-    WeatherCondition = models.CharField(max_length=100)
+    location = models.CharField(max_length=255)
+    date = models.DateField()
+    temperature = models.DecimalField(max_digits=5, decimal_places=2)
+    humidity = models.DecimalField(max_digits=5, decimal_places=2)
+    rainfall = models.DecimalField(max_digits=5, decimal_places=2)
+    weather_condition = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.date} - {self.location}"
 
 class SoilConditions(models.Model):
-    Location = models.CharField(max_length=255)
-    pH = models.DecimalField(max_digits=4, decimal_places=2)
-    OrganicMatter = models.DecimalField(max_digits=5, decimal_places=2)
-    Nitrogen = models.DecimalField(max_digits=5, decimal_places=2)
-    Phosphorus = models.DecimalField(max_digits=5, decimal_places=2)
-    Potassium = models.DecimalField(max_digits=5, decimal_places=2)
+    location = models.CharField(max_length=255)
+    ph = models.DecimalField(max_digits=4, decimal_places=2)
+    organic_matter = models.DecimalField(max_digits=5, decimal_places=2)
+    nitrogen = models.DecimalField(max_digits=5, decimal_places=2)
+    phosphorus = models.DecimalField(max_digits=5, decimal_places=2)
+    potassium = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.location
 
 class CropYield(models.Model):
-    Farmer = models.ForeignKey(Farmers, on_delete=models.CASCADE)
-    Crop = models.ForeignKey(Crops, on_delete=models.CASCADE)
-    Year = models.IntegerField()
-    Yield = models.DecimalField(max_digits=10, decimal_places=2)
+    farmer = models.ForeignKey(Farmers, on_delete=models.CASCADE)
+    crop = models.ForeignKey(Crops, on_delete=models.CASCADE)
+    year = models.IntegerField()
+    yield_value = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.crop} - {self.year}"
 
 class Subscriptions(models.Model):
     PLAN_CHOICES = (
@@ -58,20 +75,29 @@ class Subscriptions(models.Model):
         ('Professional', 'Professional'),
     )
     
-    User = models.OneToOneField(Users, on_delete=models.CASCADE)
-    Plan = models.CharField(max_length=15, choices=PLAN_CHOICES)
-    StartDate = models.DateField()
-    EndDate = models.DateField()
-    Status = models.CharField(max_length=15)
+    user = models.OneToOneField(Users, on_delete=models.CASCADE)
+    plan = models.CharField(max_length=15, choices=PLAN_CHOICES)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    status = models.CharField(max_length=15)
+
+    def __str__(self):
+        return f"{self.user} - {self.plan}"
 
 class Reports(models.Model):
-    User = models.ForeignKey(Users, on_delete=models.CASCADE)
-    ReportType = models.CharField(max_length=15)
-    GeneratedAt = models.DateTimeField(auto_now_add=True)
-    ReportData = models.TextField()
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    report_type = models.CharField(max_length=15)
+    generated_at = models.DateTimeField(auto_now_add=True)
+    report_data = models.TextField()
+
+    def __str__(self):
+        return f"{self.report_type} - {self.generated_at}"
 
 class ConsultingRequests(models.Model):
-    User = models.ForeignKey(Users, on_delete=models.CASCADE)
-    RequestDate = models.DateTimeField(auto_now_add=True)
-    Status = models.CharField(max_length=15)
-    Description = models.TextField()
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    request_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=15)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"Request by {self.user} on {self.request_date}"

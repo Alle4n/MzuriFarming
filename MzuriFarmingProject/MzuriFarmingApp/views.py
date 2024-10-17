@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import LoginForm, RegistrationForm, CropForm
 from django.db.models import Sum, Count
+import pandas as pd
 
 def index(request):
     return render(request, 'index.html', {'current_page': 'index'})
@@ -36,7 +37,7 @@ def register_view(request):
             password = form.cleaned_data['password']
             User.objects.create_user(username=username, email=email, password=password)
             messages.success(request, 'Registration successful! You can now log in.')
-            return redirect('login')  # Redirect to login page
+            return redirect('login')
     else:
         form = RegistrationForm()
 
@@ -46,8 +47,14 @@ def farmers_list(request):
     farmers = Farmers.objects.all()
     return render(request, 'farmers.html', {'farmers': farmers, 'current_page': 'farmers'})
 
+def read_crop_data_from_excel(file_path):
+    df = pd.read_excel(file_path, sheet_name='Sheet1')
+    crop_choices = df[['CropName', 'ScientificName']].drop_duplicates().to_dict('records')
+    return crop_choices
+
 def crops_list(request):
-    crops = Crops.objects.all()
+    crops = Crops.objects.all()  # No need for select_related since classification is a CharField
+    crop_choices = read_crop_data_from_excel('MzuriFarmingApp/static/excel/crops.xlsx')  # Update the path
     form = CropForm()
 
     if request.method == 'POST':
@@ -78,7 +85,12 @@ def crops_list(request):
             messages.success(request, 'Crop deleted successfully!')
             return redirect('crops_list')
     
-    return render(request, 'crops.html', {'crops': crops, 'form': form, 'current_page': 'crops'})
+    return render(request, 'crops.html', {
+        'crops': crops,
+        'form': form,
+        'crop_choices': crop_choices,
+        'current_page': 'crops'
+    })
 
 def subscriptions_list(request):
     subscriptions = Subscriptions.objects.all()
@@ -97,12 +109,12 @@ def dashboard(request):
     farmer_count = Farmers.objects.count()
     crop_count = Crops.objects.count()
 
-    yield_data = CropYield.objects.values('Year').annotate(total_yield=Sum('Yield')).order_by('Year')
-    years = [data['Year'] for data in yield_data]
+    yield_data = CropYield.objects.values('year').annotate(total_yield=Sum('yield_value')).order_by('year')
+    years = [data['year'] for data in yield_data]
     total_yields = [data['total_yield'] for data in yield_data]
 
-    registration_data = Users.objects.values('CreatedAt__date').annotate(count=Count('id')).order_by('CreatedAt__date')
-    registration_dates = [data['CreatedAt__date'] for data in registration_data]
+    registration_data = Users.objects.values('created_at__date').annotate(count=Count('id')).order_by('created_at__date')
+    registration_dates = [data['created_at__date'] for data in registration_data]
     registration_counts = [data['count'] for data in registration_data]
 
     context = {
